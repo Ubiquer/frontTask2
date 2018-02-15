@@ -49,8 +49,8 @@ function strcmp(a, b) {
       return (a < b ? -1 : (a > b ? 1 : 0));
 }
 
-function checkForNullOrEmpty(runicWord){
-    if(typeof runicWord === "undefined" || runicWord === null || !runicWord.value){
+function inputIsNotNullOrEmpty(runicWord){
+    if(typeof runicWord === "undefined" || runicWord === null || runicWord === 0){
      console.log("Input is undefined, null or empty")
      return false;
     }
@@ -58,32 +58,36 @@ function checkForNullOrEmpty(runicWord){
  }
 
     exports.generateRunicWords = spellLength =>{
-        
-        if(checkForNullOrEmpty(spellLength) && spellLengthIsNumber(spellLength)){
 
-            for(let i=0; i< sortedRunicTable.length; i++ ){
-                currentRunicWord = sortedRunicTable[i];
-            
-                if(runicWordsArray.length<10){
+       if(inputIsNotNullOrEmpty(spellLength) && spellLengthIsNumber(spellLength)){
+
+        for(let i=0; i< sortedRunicTable.length; i++ ){
+            currentRunicWord = sortedRunicTable[i];
+            if(runicWordsArray.length<10){
+                checkForUnusedRune(runicWord);
+                if(runicWordIsFull(runicWord, spellLength) == true){
+                    runicWordsArray.push(runicWord);
+                    runicWord = [];
                     checkForUnusedRune(runicWord);
-                    if(runicWordIsFull(runicWord, spellLength) == true){
-                        runicWordsArray.push(runicWord);
-                        runicWord = [];
-                        checkForUnusedRune(runicWord);
-                    }
-                    addObjectToRunicWord(runicWord, currentRunicWord);
                 }
+                addObjectToRunicWord(runicWord, currentRunicWord);
             }
+        }
+       }
             createMostPowerfullWords(runicWordsArray, spellLength);
             console.log(finalRunicWords);
             return finalRunicWords;
-        }else console.log("Input is not a number");
     }
 
     function spellLengthIsNumber(spellLength){
-        return typeof(spellLength) === 'number' &&
+        if(typeof(spellLength) === 'number' &&
         isFinite(spellLength) &&
-        Math.round(spellLength) === spellLength;
+        Math.round(spellLength) === spellLength){
+            return true;
+        }else{
+            console.log("You have to type a number.")
+            return false;
+        }
     }
 
     function checkForUnusedRune(myRunicWordArray){
@@ -168,10 +172,8 @@ function checkForNullOrEmpty(runicWord){
 
         let spellIsCorrect = true;
 
+        if(onStartVerifiction(runicWord)){
         words = runicWord.split("-");
-
-        if(onStartVerifiction(runicWord, words)){
-
         findAndVerifyRunicObjects(sortedRunicTable, words);
         if(runicObjects.length < words.length){
             spellIsCorrect = false;
@@ -193,13 +195,17 @@ function checkForNullOrEmpty(runicWord){
     function onStartVerifiction(runicWord, words){
         if(re.test(runicWord, words)){
             console.log("Hex is not a spell. Go learn some magic..");
-            return spellIsCorrect = false;
+            return false;
+        }else if(typeof runicWord === 'object'){
+            console.log("Only strings are allowed")
+            return false;
         }else if(/^-?[\d.]+(?:e-?\d+)?$/.test(runicWord)){
             console.log("Numbers are not allowed!");
-            return spellIsCorrect = false;
-        }else if(checkForNullOrEmpty(runicWord)){
-            return spellIsCorrect = false;
-        }else return spellIsCorrect = true;
+            return false;
+        }else if(!inputIsNotNullOrEmpty(runicWord)){
+            console.log("Input is null or empty")
+            return false;
+        }else return true;
     }
 
     function findAndVerifyRunicObjects(sortedRunicTable, words){

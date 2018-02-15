@@ -2,5 +2,5 @@ const add = require('./CCFrontTask2');
 
 
 
-add.generateRunicWords("aa");
-add.checkRunicWord("Ohm");
+add.generateRunicWords(2);
+// add.checkRunicWord("El");
