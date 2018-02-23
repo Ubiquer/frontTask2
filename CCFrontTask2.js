@@ -66,7 +66,7 @@ exports.generateRunicWords = spellLength => {
       currentRunicWord = sortedRunicTable[i];
       if (runicWordsArray.length < 10) {
         checkForUnusedRune(runicWord);
-        if (runicWordIsFull(runicWord, spellLength) == true) {
+        if (runicWord.length === spellLength) {
           runicWordsArray.push(runicWord);
           runicWord = [];
           checkForUnusedRune(runicWord);
@@ -74,22 +74,23 @@ exports.generateRunicWords = spellLength => {
         addObjectToRunicWord(runicWord, currentRunicWord);
       }
     }
-  }
-  createMostPowerfullWords(runicWordsArray, spellLength);
-  console.log(finalRunicWords);
-  return finalRunicWords;
+    createWords(runicWordsArray, spellLength);
+    console.log(finalRunicWords);
+    return finalRunicWords;
+  }  
 }
 
-const isNumber = function inputArgIsNumber(spellLength) {
-  if(typeof spellLength === 'number' && !isNaN(spellLength)){
+const isNumber = function inputArgIsNumber (spellLength) {
+  if(typeof spellLength === 'number' && !isNaN (spellLength)){
     return true;
   }else{
     console.log("You have to type a number!");
+    return false;
   }
   
 }
 
-const checkForUnusedRune = function checkForUnusedRune(myRunicWordArray) {
+const checkForUnusedRune = function checkForUnusedRune (myRunicWordArray) {
   let numberOfDeletedObjects = 0;
   for (let i = 0; i < unusedRuneArray.length; i++) {
     if (!checkForAntiRune(myRunicWordArray, unusedRuneArray[i])) {
@@ -100,20 +101,13 @@ const checkForUnusedRune = function checkForUnusedRune(myRunicWordArray) {
   }
 }
 
-function checkIfRunicWordIsFull(myRunicWordArray, spellLength) {
+const checkIfWordIsFull = function checkIfRunicWordIsFull (myRunicWordArray, spellLength) {
   if (myRunicWordArray.length == spellLength && unusedRuneArray.length > 0) {
     myRunicWordArray.push(unusedRuneArray[0]);
   }
 }
 
-function runicWordIsFull(runicWord, spellLength) {
-  if (runicWord.length === spellLength) {
-    return true;
-  }
-  return false;
-}
-
-function checkForAntiRune(myRunicWordArray, myRune) {
+const checkForAntiRune = function checkForAntiRune (myRunicWordArray, myRune) {
   let isValid = false;
   for (let i = 0; i < myRunicWordArray.length; i++) {
     if (strcmp(myRunicWordArray[i].antiRune, myRune.rune) == 0) {
@@ -123,20 +117,20 @@ function checkForAntiRune(myRunicWordArray, myRune) {
   return isValid;
 }
 
-function addObjectToRunicWord(myRunnicWordArray, currentWord) {
-  if (!checkForAntiRune(myRunnicWordArray, currentWord)) {
-    runicWord.push(currentWord);
+const addObjectToRunicWord = function addObjectToRunicWord (myRunnicWordArray, currentWord) {
+  if (!checkForAntiRune (myRunnicWordArray, currentWord)) {
+    runicWord.push (currentWord);
   } else {
-    unusedRuneArray.push(currentWord);
+    unusedRuneArray.push (currentWord);
   }
 }
 
-function createWord(myRunicWord, spellLength) {
+const createWord = function createRunicWord (myRunicWord, spellLength) {
   let power = 0;
   let word = "";
   let runeWord = { word: "", power: "" };
 
-  myRunicWord.forEach(element => {
+  myRunicWord.forEach (element => {
     if (element.power != null && element.rune != "") {
       power += element.power - 1;
       word = word + element.rune + "-";
@@ -147,11 +141,11 @@ function createWord(myRunicWord, spellLength) {
     runeWord.word = word;
     runeWord.power = power;
   })
-  runeWord.word = runeWord.word.slice(0, -1);
-  finalRunicWords.push(runeWord);
+  runeWord.word = runeWord.word.slice (0, -1);
+  finalRunicWords.push (runeWord);
 }
 
-function createMostPowerfullWords(runicWordsArray, spellLength) {
+const createWords = function createMostPowerfullWords (runicWordsArray, spellLength) {
   runicWordsArray.forEach(element => {
     createWord(element, spellLength);
   });
@@ -173,58 +167,58 @@ exports.checkRunicWord = runicWord => {
   let allChecksCorrect = false;
 
   if (isWordCorrect(runicWord)) {
-    words = runicWord.split("-");
-    findRunicObjects(sortedRunicTable, words);
+    words = runicWord.split ("-");
+    findRunicObjects (sortedRunicTable, words);
         
-    if(isLengthCorrect(runicObjects, words)
-        && isSpellInOrder(runicObjects, words)){
+    if(isLengthCorrect (runicObjects, words)
+        && isSpellInOrder (runicObjects, words)){
           allChecksCorrect = true
         }else{
           allChecksCorrect = false;
         }
   }
-  console.log(power)
-  if(allChecksCorrect) return power;
+  console.log (power)
+  if (allChecksCorrect) return power;
 
 }
 
-function isNotANumber(runicWord) {
-  if(!isNaN(runicWord)){
+function isNotANumber (runicWord) {
+  if (!isNaN (runicWord)){
       console.log("Numbers are not allowed!")
       return false;
   } return true;
 }
 
-const isLengthCorrect = function verifyRunicObjectsLength(runicObjects, words) {
+const isLengthCorrect = function verifyRunicObjectsLength (runicObjects, words) {
   if (runicObjects.length < words.length) {
     console.log("Part of your spell is not correct");
     return false;
   }return true;
 }
 
-const isWordCorrect = function onStartVerifiction(runicWord, words) {
-  if (!isNotNullOrEmpty(runicWord)) {
+const isWordCorrect = function onStartVerifiction (runicWord, words) {
+  if (!isNotNullOrEmpty (runicWord)) {
     console.log("Input is undefined, null or empty");
     return false;
-  } return isNotANumber(runicWord);
+  } return isNotANumber (runicWord);
 }
 
-const findRunicObjects = function findAndVerifyRunicObjects(sortedRunicTable, words) {
+const findRunicObjects = function findAndVerifyRunicObjects (sortedRunicTable, words) {
   for (let i = 0; i < sortedRunicTable.length; i++) {
-    verify(sortedRunicTable[i], words);
+    verify (sortedRunicTable[i], words);
   }
 }
 
-const verify = function findAndVerify(runicObject, spells) {
+const verify = function findAndVerify (runicObject, spells) {
   for (let j = 0; j < spells.length; j++) {
-    if (runicObject.rune == spells[j] && !antiRuneSet.has(runicObject.rune)) {
-      antiRuneSet.add(runicObject.antiRune);
-      runicObjects.push(runicObject);
+    if (runicObject.rune == spells[j] && !antiRuneSet.has (runicObject.rune)) {
+      antiRuneSet.add (runicObject.antiRune);
+      runicObjects.push (runicObject);
     }
   }
 }
 
-const isSpellInOrder = function verifySpellOrder(myRunicObject, myWords) {
+const isSpellInOrder = function verifySpellOrder (myRunicObject, myWords) {
 
   let isInOrder = false;
   for (i = 0; i < myWords.length; i++) {
