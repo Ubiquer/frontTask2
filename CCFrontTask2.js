@@ -35,28 +35,11 @@ const runicTable = [
   { rune: "Zod", power: 19, antiRune: "Jah" },
 ]
 
-const sortedRunicTable = runicTable.sort(function (a, b) {
-  return parseFloat(b.power) - parseFloat(a.power)
-});
-
 let runicWordsArray = [];
 let unusedRuneArray = [];
 let runicWord = [];
 let currentRunicWord = [];
 let finalRunicWords = [];
-
-function strcmp(a, b) {
-  return (a < b ? -1 : (a > b ? 1 : 0));
-}
-
-function isNotNullOrEmpty(runicWord) {
-
-  if (typeof runicWord === "undefined" || runicWord === null || runicWord === 0) {
-    console.log("Input is undefined, null or empty")
-    return false;
-  }
-  return true;
-}
 
 exports.generateRunicWords = spellLength => {
 
@@ -78,6 +61,23 @@ exports.generateRunicWords = spellLength => {
     console.log(finalRunicWords);
     return finalRunicWords;
   }  
+}
+
+const sortedRunicTable = runicTable.sort(function (a, b) {
+  return parseFloat(b.power) - parseFloat(a.power)
+});
+
+function strcmp(a, b) {
+  return (a < b ? -1 : (a > b ? 1 : 0));
+}
+
+function isNotNullOrEmpty(runicWord) {
+
+  if (typeof runicWord === "undefined" || runicWord === null || runicWord === 0) {
+    console.log("Input is undefined, null or empty")
+    return false;
+  }
+  return true;
 }
 
 const isNumber = function inputArgIsNumber (spellLength) {
